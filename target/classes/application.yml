@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: springboot-demo
+
+  datasource:
+    url: jdbc:mysql://192.168.173.132:3306/demo_db?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8
+    username: root
+    password: Xinnian@1314
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update       # 自动建表/更新表结构，生产环境建议改为 validate
+    show-sql: true           # 打印 SQL 语句，调试用
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
