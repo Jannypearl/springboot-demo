@@ -4,7 +4,10 @@ import com.example.demo.common.Result;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,5 +58,19 @@ public class UserController {
             return Result.success();
         }
         return Result.error(404, "用户不存在");
+    }
+
+    // 导出用户数据为 CSV
+    @GetMapping("/export/csv")
+    public ResponseEntity<byte[]> exportToCsv() {
+        String csvContent = userService.exportUsersToCsv();
+        byte[] csvBytes = csvContent.getBytes();
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv;charset=UTF-8"));
+        headers.setContentDispositionFormData("attachment", "users_export.csv");
+        headers.setContentLength(csvBytes.length);
+        
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
 }

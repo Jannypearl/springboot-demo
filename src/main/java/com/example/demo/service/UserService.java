@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -42,5 +43,28 @@ public class UserService {
         }
         userRepository.deleteById(id);
         return true;
+    }
+
+    /**
+     * 导出用户数据为 CSV 格式字符串
+     * @return CSV 格式的用户数据
+     */
+    public String exportUsersToCsv() {
+        List<User> users = findAll();
+        StringBuilder csvBuilder = new StringBuilder();
+        
+        // 添加 CSV 表头
+        csvBuilder.append("ID,用户名,邮箱,年龄\n");
+        
+        // 添加用户数据
+        users.forEach(user -> 
+            csvBuilder.append(String.format("%d,%s,%s,%s\n",
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getAge() != null ? user.getAge() : ""))
+        );
+        
+        return csvBuilder.toString();
     }
 }
